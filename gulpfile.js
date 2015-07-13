@@ -4,8 +4,13 @@ var gulp = require('gulp');
 var browserSync = require('browser-sync').create();
 var reload = browserSync.reload;
 var watch = require('gulp-watch');
+var phpunit = require('gulp-phpunit');
 
 var destpath = "/Library/WebServer/Documents/photo-conv/";
+
+gulp.task('phpunit', function() {
+  gulp.src('tests/phpunit.xml').pipe(phpunit('/usr/local/bin/phpunit'));
+});
 
 gulp.task('web', function() {
   gulp.src("web/*.*")

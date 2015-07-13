@@ -15,4 +15,6 @@ foreach($_FILES['input_file']['error'] as $key => $error) {
     }
 }
 
+phpinfo();
+
  ?>
