@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>写真コンバータ</title>
+  <!-- Latest compiled and minified CSS -->
+  <script src="plugins/jquery.min.js"></script>
+  <link rel="stylesheet" href="plugins/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="plugins/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="plugins/js/bootstrap.min.js"></script></head>
+<body>
+    <div class="container">
+        <h1>写真コンバータ</h1>
+        <form method="post" action="photo-conv.php" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="input_width">写真の最大幅</label>
+                <div class="row">
+                   <div class="col-xs-2">
+                    <input type="text" id="input_width" name="input_width" class="form-control" value="1366"/>
+                   </div>
+                    <div class="col-xs-10 form-control-static">ピクセル</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="input_height">写真の最大高さ</label>
+                <div class="row">
+                   <div class="col-xs-2">
+                    <input type="text" id="input_height" name="input_height" class="form-control" value="768"/>
+                   </div>
+                    <div class="col-xs-10 form-control-static">ピクセル</div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">ファイルの撮影日時のEXIF調整</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label>ファイルの撮影日時のEXIF調整</label>
+                        <div class="form-group">
+                           <div class="checkbox">
+                                <label for="check_filetime">
+                                    <input type="checkbox" id="check_filetime" name="check_filetime"/> ファイルの撮影日時のEXIF調整を行う
+                                </label>
+                           </div>
+                            <p class="help-block">132334.jpgのようなファイル名のファイルは、午後1時23分34秒に撮影したようにEXIFに書き込みます。</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="text_filedate">ファイルの撮影日付
+                        </label>
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <input type="text" id="text_filedate" name="text_filedate" class="form-control" placeholder="2015-1-2"/>
+                            </div>
+                        </div>
+                        <p class="help-block">西暦-月-日の形で入力すると、その日付に撮影したことにします。省略するとファイルの作成日時を設定します。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="input_file">変換する写真</label>
+                <input type="hidden" name="MAX_FILE_SIZE" value="500000000" />
+                <input type="file" id="input_file" name="input_file[]"
+                  accept="image/jpeg, image/gif, image/png" multiple/>
+                <p class="help-block">一度にアップロードできるのは100個まで。合計サイズは500MByteまで。</p>
+            </div>
+            <input type="submit" value="変換実行" class="btn btn-primary"></input>
+        </form>
+    </div>
+</body>
+</html>

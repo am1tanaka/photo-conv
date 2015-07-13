@@ -1,0 +1,23 @@
+{
+  "name": "photo-conv",
+  "version": "0.0.0",
+  "description": "写真の上限サイズを調整したり、ファイル名や指定の文字列からEXIFを書き込むPHPページ",
+  "main": "gulpfile.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/am1tanaka/photo-conv.git"
+  },
+  "author": "YuTanaka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/am1tanaka/photo-conv/issues"
+  },
+  "homepage": "https://github.com/am1tanaka/photo-conv",
+  "devDependencies": {
+    "bootstrap": "^3.3.5",
+    "browser-sync": "^2.7.13",
+    "gulp": "^3.9.0",
+    "gulp-watch": "^4.3.1",
+    "jquery": "^2.1.4"
+  }
+}
