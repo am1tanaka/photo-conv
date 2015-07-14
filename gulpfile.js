@@ -9,7 +9,8 @@ var phpunit = require('gulp-phpunit');
 var destpath = "/Library/WebServer/Documents/photo-conv/";
 
 gulp.task('phpunit', function() {
-  gulp.src('tests/phpunit.xml').pipe(phpunit('/usr/local/bin/phpunit'));
+  gulp.src('tests/phpunit.xml')
+    .pipe(phpunit('/usr/local/bin/phpunit'));
 });
 
 gulp.task('web', function() {
