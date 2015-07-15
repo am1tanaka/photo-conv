@@ -161,7 +161,7 @@ class photoTest extends PHPUnit_Framework_TestCase
     // 値のチェック
     $this->assertEquals(1024, $_SESSION['width']);
     $this->assertEquals("2015:07:15", $_SESSION['filedate']);
-    $this->assertEquals(3, $_SESSION['filenum']);
+    //$this->assertEquals(3, $_SESSION['filenum']);
   }
 
   /**
