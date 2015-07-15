@@ -2,13 +2,11 @@
   <testsuites>
     <testsuite name="photo">
       <directory>.</directory>
-      <groups>
-        <include>
-          <group>
-            form
-          </group>
-        </include>
-      </groups>
     </testsuite>
   </testsuites>
+  <groups>
+    <include>
+      <group>post</group>
+    </include>
+  </groups>
 </phpunit>

@@ -112,33 +112,57 @@ class photoTest extends PHPUnit_Framework_TestCase
     $this->assertEquals(ORIG_DATE, $pel->getDateTime());
   }
 
-  /** POSTデータを送信して、縮小とEXIFの設定を処理を行わせる
-  * @group post
-  */
-  public function testPostAll() {
+  private $engine;
+
+  protected function setUp() {
     $_POST['input_width'] = 1024;
     $_POST['input_height'] = 1024;
     $_POST['check_filetime'] = "on";
     $_POST['text_filedate'] = "2015/7/15";
-    // ファイル
+    $_POST['file_count'] = 3;
+    //
     $_FILES = $this->TEST_FILES;
-
-    // ここで処理を止め、テストが未完成であるという印をつけます。
-    CPhotoConvProc::doConv();
-
-    $this->assertTrue(TRUE, '変換テスト');
-
-    $this->markTestIncomplete('このテストは、まだ実装されていません。');
+    //
+    $this->engine = new CPhotoConvProc(true);
   }
 
   /**
-   * サイズのみの修正。チェックを外した状態での処理をチェック
+   * アップロードされたデータをまとめて処理する
+   * @group post
    */
-  public function testPostSize() {
-    $this->assertTrue(TRUE, 'サイズのみ');
+  public function testPostAll() {
+    $_POST['cmd'] = 'all';
+    $this->engine->procConv();
 
-    // ここで処理を止め、テストが未完成であるという印をつけます。
-    $this->markTestIncomplete('このテストは、まだ実装されていません。');
+    // ファイルが出力されたことを確認する
+    $this->assertFileExists($_SESSION['tempfolder']."/".$_FILES['input_file']['name'][0]);
+    $this->assertFileExists($_SESSION['tempfolder']."/".$_FILES['input_file']['name'][1]);
+    $this->assertFileExists($_SESSION['tempfolder']."/".$_FILES['input_file']['name'][2]);
+  }
+
+  /**
+  * POSTデータを送信して、圧縮の開始をテストする
+  * @group post
+  */
+  public function testPostStart() {
+    $_POST['cmd'] = 'start';
+    $this->engine->procConv();
+
+    // 値のチェック
+    $this->assertEquals(1024, $_SESSION['width']);
+    $this->assertEquals("2015:07:15", $_SESSION['filedate']);
+    $this->assertEquals(3, $_SESSION['filenum']);
+  }
+
+  /**
+   * アップロードのテスト
+   * @group post
+   */
+  public function testPostUpload() {
+    $_POST['cmd'] = 'start';
+    $this->engine->procConv();
+
+    $this->assertEquals(1024, $_SESSION['width']);
   }
 
   /**

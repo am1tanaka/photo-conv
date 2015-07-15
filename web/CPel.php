@@ -55,7 +55,7 @@ class CPel {
     }
   }
 
-  function setSizeExif($id, $data) {
+  private function setSizeExif($id, $data) {
     $entry = $this->exif->getEntry($id);
     if ($entry){
       $entry->setValue($data);

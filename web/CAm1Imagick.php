@@ -12,7 +12,7 @@ class CAm1Imagick {
   }
 
   /**
-   * 指定のファイルをImagickに読み込む
+   * 指定のファイルをImagickに読み込む
    * @param {string} ファイルパス
    */
   function __construct($fname) {
