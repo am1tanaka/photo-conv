@@ -2,3 +2,5 @@
 node_modules/
 tests/files/
 web/.DS_Store
+web/plugins/*.jpg
+web/plugins/test.php

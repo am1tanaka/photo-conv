@@ -14,10 +14,24 @@ class photoTest extends PHPUnit_Framework_TestCase
   private $TEST_FILES = array(
     'input_file' => array(
       'tmp_name' => array(
-        '/Users/yutanaka/git/photo-conv/tests/files/photo/photo/IMG_1538.jpg',
-        '/Users/yutanaka/git/photo-conv/tests/files/JPG/132200.jpg',
-        '/Users/yutanaka/git/photo-conv/tests/files/JPG/132400.jpg',
-        '/Users/yutanaka/git/photo-conv/tests/files/JPG/134000.jpg'
+        '/Users/yutanaka/git/photo-conv/tests/files/IMG_1538.jpg',
+        '/Users/yutanaka/git/photo-conv/tests/files/132200.jpg',
+        '/Users/yutanaka/git/photo-conv/tests/files/132400.jpg'
+      ),
+      'name' => array(
+        'IMG_1538.jpg',
+        '132200.jpg',
+        '132400.jpg'
+      ),
+      'type' => array(
+        'image/jpeg',
+        'image/jpeg',
+        'image/jpeg'
+      ),
+      'size' => array(
+        2306428,
+        419461,
+        328690
       )
     )
   );
@@ -97,6 +111,47 @@ class photoTest extends PHPUnit_Framework_TestCase
     $this->assertEquals(ORIG_HEIGHT, $pel->getHeight());
     $this->assertEquals(ORIG_DATE, $pel->getDateTime());
   }
+
+  /** POSTデータを送信して、縮小とEXIFの設定を処理を行わせる
+  * @group post
+  */
+  public function testPostAll() {
+    $_POST['input_width'] = 1024;
+    $_POST['input_height'] = 1024;
+    $_POST['check_filetime'] = "on";
+    $_POST['text_filedate'] = "2015/7/15";
+    // ファイル
+    $_FILES = $this->TEST_FILES;
+
+    // ここで処理を止め、テストが未完成であるという印をつけます。
+    CPhotoConvProc::doConv();
+
+    $this->assertTrue(TRUE, '変換テスト');
+
+    $this->markTestIncomplete('このテストは、まだ実装されていません。');
+  }
+
+  /**
+   * サイズのみの修正。チェックを外した状態での処理をチェック
+   */
+  public function testPostSize() {
+    $this->assertTrue(TRUE, 'サイズのみ');
+
+    // ここで処理を止め、テストが未完成であるという印をつけます。
+    $this->markTestIncomplete('このテストは、まだ実装されていません。');
+  }
+
+  /**
+   * 日付が入力されていない時の処理をテスト。ファイルの撮影日をそのまま利用して、
+   * 時間だけ修正する。
+   */
+  public function testPostNoDate() {
+    $this->assertTrue(TRUE, '日付省略テスト');
+
+    // ここで処理を止め、テストが未完成であるという印をつけます。
+    $this->markTestIncomplete('このテストは、まだ実装されていません。');
+  }
+
 
 /*
   public function testAppend()
