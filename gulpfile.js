@@ -20,6 +20,8 @@ gulp.task('web', function() {
     .pipe(gulp.dest(destpath+"plugins/"));
   gulp.src("node_modules/bootstrap/dist/**/*.*")
     .pipe(gulp.dest(destpath+"plugins/"));
+  gulp.src("web/plugins/pel/**/*.*")
+    .pipe(gulp.dest(destpath+"plugins/pel/"));
 });
 
 gulp.task('reload', function() {

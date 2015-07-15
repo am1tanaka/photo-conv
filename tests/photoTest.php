@@ -141,6 +141,16 @@ class photoTest extends PHPUnit_Framework_TestCase
   }
 
   /**
+   * 日付の指定ミスのチェック
+   * @group post
+   */
+  public function testPostAllNoDate() {
+    $_POST['text_filedate'] = "";
+    $_POST['cmd'] = 'all';
+    $this->engine->procConv();
+  }
+
+  /**
   * POSTデータを送信して、圧縮の開始をテストする
   * @group post
   */

@@ -2,7 +2,7 @@
 
 //set_include_path(get_include_path() . PATH_SEPARATOR . "/Users/yutanaka/git/photo-conv/web/plugins/pel");
 
-require_once "web/plugins/pel/autoload.php";
+require_once "plugins/pel/autoload.php";
 use lsolesen\pel\PelJpeg;
 use lsolesen\pel\PelTag;
 use lsolesen\pel\PelIfd;
@@ -48,11 +48,12 @@ class CPel {
 
   public function getDateTime() {
     if ($this->exif) {
-      return $this->exif->getEntry(PelTag::DATE_TIME_ORIGINAL)->getText();
+      $orig = $this->exif->getEntry(PelTag::DATE_TIME_ORIGINAL);
+      if ($orig) {
+        return $orig->getText();
+      }
     }
-    else {
-      return false;
-    }
+    return "";
   }
 
   private function setSizeExif($id, $data) {

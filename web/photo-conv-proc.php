@@ -12,12 +12,15 @@ define('TEMP_PHOTOCONV', '/photoconv_temp');
 /** 作業フォルダーの有効秒数*/
 define('TEMP_LIFETIME', 10*60);
 
+require_once "CAm1Imagick.php";
+require_once "CPel.php";
+
 class CPhotoConvProc {
   private $proc = null;
   private $isTest = false;
   private $response = ["result" => "ok"];
 
-  function __construct($test) {
+  function __construct($test=false) {
     $this->isTest = $test;
   }
 
@@ -61,7 +64,15 @@ class CPhotoConvProc {
           $dt = $_SESSION['filedate'];
           // 日付が指定されているか
           if (strlen($dt) < 4) {
-            $dt = preg_split("/ /", $pel->getDateTime())[0];
+            $dt = "".preg_split("/ /", $pel->getDateTime())[0];
+            if (!$dt) {
+              $this->response = array(
+                "result" => "error",
+                "message" => "[".$_FILES['input_file']['name'][$i]."]に撮影時間を追加するには、日付を指定してください。"
+              );
+              http_response_code(500);
+              return;
+            }
           }
           // :を-に変換
           $dt = preg_replace("/:/", "-", $dt);
@@ -116,9 +127,16 @@ class CPhotoConvProc {
     $_SESSION['width'] = $_POST['input_width']-0;
     $_SESSION['height'] = $_POST['input_height']-0;
     $_SESSION['filetime'] = $_POST['check_filetime'];
-    $_SESSION['filedate'] = (new DateTime($_POST['text_filedate']))->format("Y:m:d");
+    if ($_POST['text_filedate']) {
+      $_SESSION['filedate'] = (new DateTime($_POST['text_filedate']))->format("Y:m:d");
+    }
+    else {
+      $_SESSION['filedate'] = "";
+    }
+    /*
     $_SESSION['filenum'] = $_POST['file_count'];
     $_SESSION['filecount'] = 0;
+    */
     $_SESSION['tempfolder'] = $tmpfolder;
   }
 
