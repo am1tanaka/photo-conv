@@ -17,7 +17,10 @@
     "bootstrap": "^3.3.5",
     "browser-sync": "^2.7.13",
     "gulp": "^3.9.0",
+    "gulp-chmod": "^1.2.0",
+    "gulp-ftp": "^1.0.4",
     "gulp-phpunit": "^0.8.1",
+    "gulp-sftp": "^0.1.4",
     "gulp-watch": "^4.3.1",
     "jquery": "^2.1.4"
   }

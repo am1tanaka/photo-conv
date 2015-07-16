@@ -52,13 +52,13 @@ class CPhotoConvProc {
     for ($i=0 ; $i<$num ; $i++) {
       // 保存先ファイル名
       $dest = $_SESSION['tempfolder']."/".$_FILES['input_file']['name'][$i];
-
-      // サイズ調整
       $imagick = new CAm1Imagick($_FILES['input_file']['tmp_name'][$i]);
+
       if ($_SESSION['isresize'] == 'on') {
         $imagick->resize($_SESSION['width']-0, $_SESSION['height']-0);
       }
       $geo = $imagick->getGeometry();
+
       $imagick->writeFile($dest);
       $imagick->clear();
 
@@ -226,13 +226,14 @@ class CPhotoConvProc {
     // 作業フォルダーの作成
     $limit = (new DateTime())->getTimestamp()+TEMP_LIFETIME;
     $tmpfolder = dirname(__FILE__).TEMP_PHOTOCONV."/".$limit."_".$this->makeRandStr(3);
-    if (!mkdir($tmpfolder, 0777, true)) {
+    if (!mkdir($tmpfolder, 0700, true)) {
       // 失敗したらエラー
       http_response_code(500);
       $this->response = array(
         "result" => "error",
         "message" => "サーバーエラーが発生しました(1)."
       );
+      return;
     }
 
     // パラメータを受け取る

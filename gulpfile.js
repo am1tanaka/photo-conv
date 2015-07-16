@@ -5,12 +5,37 @@ var browserSync = require('browser-sync').create();
 var reload = browserSync.reload;
 var watch = require('gulp-watch');
 var phpunit = require('gulp-phpunit');
+var sftp = require('gulp-sftp');
+var chmod = require('gulp-chmod');
+var FTPCONFIG = require('./ftpconfig.js');
 
 var destpath = "/Library/WebServer/Documents/photo-conv/";
 
-gulp.task('phpunit', function() {
-  gulp.src('tests/phpunit.xml')
-    .pipe(phpunit('/usr/local/bin/phpunit'));
+gulp.task('deploy-plugins', function() {
+  return gulp.src(['node_modules/jquery/dist/jquery.min.js', 'node_modules/bootstrap/dist/**/*.*'])
+    .pipe(sftp({
+      host: FTPCONFIG.FTP_URL,
+      auth: 'privateKey',
+      remotePath: FTPCONFIG.FTP_REMOTEPATH+'/plugins'
+    }));
+});
+
+gulp.task('deploy-web', function() {
+  return gulp.src('web/*')
+    .pipe(sftp({
+      host: FTPCONFIG.FTP_URL,
+      auth: 'privateKey',
+      remotePath: FTPCONFIG.FTP_REMOTEPATH
+    }));
+});
+
+gulp.task('deploy', ['deploy-plugins', 'deploy-web'], function() {
+  return gulp.src('web/plugins/pel/**/*')
+    .pipe(sftp({
+      host: FTPCONFIG.FTP_URL,
+      auth: 'privateKey',
+      remotePath: FTPCONFIG.FTP_REMOTEPATH+"/plugins/pel"
+    }));
 });
 
 gulp.task('web', function() {

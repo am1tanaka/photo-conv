@@ -31,5 +31,4 @@
 require_once "photo-conv-proc.php";
 
 (new CPhotoConvProc())->procConv();
-
  ?>
