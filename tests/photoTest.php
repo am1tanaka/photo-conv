@@ -16,12 +16,12 @@ class photoTest extends PHPUnit_Framework_TestCase
       'tmp_name' => array(
         '/Users/yutanaka/git/photo-conv/tests/files/IMG_1538.jpg',
         '/Users/yutanaka/git/photo-conv/tests/files/132200.jpg',
-        '/Users/yutanaka/git/photo-conv/tests/files/132400.jpg'
+        '/Users/yutanaka/git/photo-conv/tests/files/132210.jpg'
       ),
       'name' => array(
         'IMG_1538.jpg',
         '132200.jpg',
-        '132400.jpg'
+        '132210.jpg'
       ),
       'type' => array(
         'image/jpeg',

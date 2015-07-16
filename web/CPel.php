@@ -3,11 +3,14 @@
 //set_include_path(get_include_path() . PATH_SEPARATOR . "/Users/yutanaka/git/photo-conv/web/plugins/pel");
 
 require_once "plugins/pel/autoload.php";
+use lsolesen\pel\PelExif;
 use lsolesen\pel\PelJpeg;
 use lsolesen\pel\PelTag;
+use lsolesen\pel\PelTiff;
 use lsolesen\pel\PelIfd;
 use lsolesen\pel\PelEntryShort;
 use lsolesen\pel\PelEntryTime;
+use lsolesen\pel\PelSubIfd;
 
 class CPel {
   private $insPel = null;
@@ -16,12 +19,28 @@ class CPel {
   function __construct($fname) {
     $this->insPel = new PelJpeg($fname);
     $app1 = $this->insPel->getExif();
-    if ($app1) {
-      $tiff = $app1->getTiff();
-      $ifd0 = $tiff->getIfd();
-      if ($ifd0) {
-        $this->exif = $ifd0->getSubIfd(PelIfd::EXIF);
-      }
+    // exifがなかったら付加する
+    if ($app1 == null) {
+      $app1 = new PelExif();
+      $this->insPel->setExif($app1);
+    }
+
+    $tiff = $app1->getTiff();
+    if ($tiff == null) {
+      $tiff = new PelTiff();
+      $app1->setTiff($tiff);
+    }
+
+    $ifd0 = $tiff->getIfd();
+    if ($ifd0 == null) {
+      $ifd0 = new PelIfd(PelIfd::IFD0);
+      $tiff->setIfd($ifd0);
+    }
+
+    $this->exif = $ifd0->getSubIfd(PelIfd::EXIF);
+    if ($this->exif == null) {
+      $this->exif = new PelIfd(PelIfd::EXIF);
+      $ifd0->addSubIfd($this->exif);
     }
   }
 
@@ -56,6 +75,20 @@ class CPel {
     return "";
   }
 
+  /**
+   * 写真の回転を返す
+   * ない場合は変更なし(1)を返す
+   */
+  public function getOrientation() {
+    if ($this->exif) {
+      $ori = $this->exif->getEntry(PelTag::ORIENTATION);
+      if ($ori) {
+        return $ori->getValue();
+      }
+    }
+    return 1;
+  }
+
   private function setSizeExif($id, $data) {
     $entry = $this->exif->getEntry($id);
     if ($entry){
@@ -63,7 +96,7 @@ class CPel {
     }
     else {
       $new = new PelEntryShort($id, $data);
-      $this->addEntry($new);
+      $this->exif->addEntry($new);
     }
   }
 
