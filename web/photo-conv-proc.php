@@ -48,7 +48,9 @@ class CPhotoConvProc {
 
       // サイズ調整
       $imagick = new CAm1Imagick($_FILES['input_file']['tmp_name'][$i]);
-      $imagick->resize($_SESSION['width']-0, $_SESSION['height']-0);
+      if ($_SESSION['isresize'] == 'on') {
+        $imagick->resize($_SESSION['width']-0, $_SESSION['height']-0);
+      }
       $geo = $imagick->getGeometry();
       $imagick->writeFile($dest);
       $imagick->clear();
@@ -81,10 +83,85 @@ class CPhotoConvProc {
           $datetime = $dt." ".$tm[0];
           $pel->setDateTime($datetime);
         }
-        //// 保存
-        $pel->saveFile($dest);
+      }
+
+      // 時間調整
+      if ($_SESSION['addsecond'] != 0) {
+        $now = (new DateTime($pel->getDateTime()))->getTimestamp()+$_SESSION['addsecond'];
+        $newdt = (new DateTime())->setTimestamp($now);
+        $pel->setDateTime($newdt->format('c'));
+      }
+
+      //// 保存
+      $pel->saveFile($dest);
+    }
+
+    // フォルダーを圧縮して返す
+    $this->downloadZip();
+  }
+
+  function downloadZip() {
+    // 圧縮
+    $zipname = $this->zip();
+    if (!$zipname) {
+      return;
+    }
+
+    // 圧縮したzipを読み込み
+    $handle = fopen($zipname, "r");
+    $file_size = filesize($zipname);
+    $zipdata = fread($handle, $file_size);
+    fclose($handle);
+
+    // zipファイルを削除
+    unlink($zipname);
+
+    // zipをダウンロード
+    if (!$this->isTest) {
+      header("Content-Disposition: attachment; filename='photos.zip'");
+      header("Content-Length: $file_size");
+      header("Content-Type: application/octet-stream");
+      header("Connection: close");
+      ob_end_clean();
+      echo $zipdata;
+      exit();
+    }
+    else {
+      echo "this is test.\n";
+      echo "zip file size=$file_size\n";
+    }
+  }
+
+  /**
+   * 返還後のフォルダーを圧縮。圧縮ファイルのパスを返す
+   * @return {string} $fname zipファイル名。失敗時はFALSE
+   */
+  function zip()
+  {
+    $zip = new ZipArchive();
+    $fname = sys_get_temp_dir()."/am1-photoconv".$this->makeRandStr(4).".zip";
+    if ($zip->open($fname, ZipArchive::CREATE) !== TRUE) {
+      $this->response = array("result" => "error", "message" => "Create Zip Error.");
+      return FALSE;
+    }
+    // ファイルを追加
+    if (is_dir($_SESSION['tempfolder']))
+    {
+      if ($dh = opendir($_SESSION['tempfolder'])) {
+        while (($file=readdir($dh))!== FALSE) {
+          $datafile = $_SESSION['tempfolder']."/".$file;
+          // ファイルで、拡張子がjpgの時、アーカイブに追加
+          if (  is_file($datafile)
+          &&  (preg_match("/\.jpg$/i", $datafile)))
+          {
+            $zip->addFile($datafile, $file);
+          }
+        }
       }
     }
+    $zip->close();
+
+    return $fname;
   }
 
   /**
@@ -124,6 +201,10 @@ class CPhotoConvProc {
     }
 
     // パラメータを受け取る
+    $_SESSION['isresize'] = "";
+    if ($_POST['check_resize']) {
+      $_SESSION['isresize'] = $_POST['check_resize']-0;
+    }
     $_SESSION['width'] = $_POST['input_width']-0;
     $_SESSION['height'] = $_POST['input_height']-0;
     $_SESSION['filetime'] = $_POST['check_filetime'];
@@ -132,6 +213,10 @@ class CPhotoConvProc {
     }
     else {
       $_SESSION['filedate'] = "";
+    }
+    $_SESSION['addsecond'] = 0;
+    if (isset($_POST['text_addsecond'])) {
+      $_SESSION['addsecond'] = $_POST['text_addsecond']-0;
     }
     /*
     $_SESSION['filenum'] = $_POST['file_count'];

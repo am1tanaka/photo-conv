@@ -16,8 +16,26 @@
     <div class="container">
         <h1>写真コンバータ</h1>
         <form method="post" action="photo-conv.php" enctype="multipart/form-data">
-          <input type="hidden" name="cmd" value="all"/>
+        <input type="hidden" name="cmd" value="all"/>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+              <h3 class="panel-title">写真サイズの縮小</h3>
+          </div>
+          <div class="panel-body">
             <div class="form-group">
+
+              <div class="form-group">
+                  <label>写真サイズの縮小</label>
+                  <div class="form-group">
+                     <div class="checkbox">
+                          <label for="check_resize">
+                            <input type="checkbox" id="check_resize" name="check_resize" checked/> 指定サイズより大きい写真は、サイズに納まるように画像を縮小する
+                          </label>
+                     </div>
+                  </div>
+              </div>
+
                 <label for="input_width">写真の最大幅</label>
                 <div class="row">
                    <div class="col-xs-2">
@@ -35,45 +53,68 @@
                     <div class="col-xs-10 form-control-static">ピクセル</div>
                 </div>
             </div>
+          </div>
+        </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">ファイルの撮影日時のEXIF調整</h3>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">ファイルの撮影日時のEXIF調整</h3>
+          </div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label>ファイルの撮影日時のEXIF調整</label>
+              <div class="form-group">
+                <div class="checkbox">
+                  <label for="check_filetime">
+                    <input type="checkbox" id="check_filetime" name="check_filetime"/> ファイルの撮影日時のEXIF調整を行う
+                  </label>
                 </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label>ファイルの撮影日時のEXIF調整</label>
-                        <div class="form-group">
-                           <div class="checkbox">
-                                <label for="check_filetime">
-                                    <input type="checkbox" id="check_filetime" name="check_filetime"/> ファイルの撮影日時のEXIF調整を行う
-                                </label>
-                           </div>
-                            <p class="help-block">132334.jpgのようなファイル名のファイルは、午後1時23分34秒に撮影したようにEXIFに書き込みます。</p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="text_filedate">ファイルの撮影日付
-                        </label>
-                        <div class="row">
-                            <div class="col-xs-2">
-                                <input type="text" id="text_filedate" name="text_filedate" class="form-control" placeholder="2015-1-2"/>
-                            </div>
-                        </div>
-                        <p class="help-block">西暦-月-日の形で入力すると、その日付に撮影したことにします。省略するとファイルの作成日時を設定します。</p>
-                    </div>
-                </div>
+                <p class="help-block">132334.jpgのようなファイル名のファイルは、午後1時23分34秒に撮影したようにEXIFに書き込みます。</p>
+              </div>
             </div>
             <div class="form-group">
-                <label for="input_file">変換する写真</label>
-                <input type="hidden" name="MAX_FILE_SIZE" value="500000000" />
-                <input type="file" id="input_file" name="input_file[]"
-                  accept="image/jpeg, image/gif, image/png" multiple/>
-                <p class="help-block">一度にアップロードできるのは100個まで。合計サイズは500MByteまで。</p>
+              <label for="text_filedate">ファイルの撮影日付
+              </label>
+              <div class="row">
+                <div class="col-xs-2">
+                  <input type="text" id="text_filedate" name="text_filedate" class="form-control" placeholder="2015-1-2"/>
+                </div>
+              </div>
+              <p class="help-block">西暦-月-日の形で入力すると、その日付に撮影したことにします。省略するとファイルの作成日時を設定します。</p>
             </div>
-            <input type="submit" value="変換実行" class="btn btn-primary"></input>
-        </form>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">撮影日時の調整</h3>
+          </div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label for="text_addsecond">調整秒数
+              </label>
+              <div class="row">
+                <div class="col-xs-2">
+                  <input type="text" id="text_addsecond" name="text_addsecond" class="form-control" placeholder="調整秒数"/>
+                </div>
+              </div>
+              <p class="help-block">10秒遅くしたい場合は10。1分早くしたい場合は-60などと入力してください。
+                <br/>省略すると調整しません。
+                <br/>EXIFがなかったり、撮影時間がない画像では何もしません。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="input_file">変換する写真</label>
+            <input type="hidden" name="MAX_FILE_SIZE" value="500000000" />
+            <input type="file" id="input_file" name="input_file[]"
+                  accept="image/jpeg, image/gif, image/png" multiple/>
+            <p class="help-block">一度にアップロードできるのは100個まで。合計サイズは500MByteまで。</p>
+        </div>
+        <input type="submit" value="変換実行" class="btn btn-primary"></input>
+      </form>
     </div>
-</body>
+  </body>
 </html>

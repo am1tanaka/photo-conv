@@ -118,6 +118,7 @@ class photoTest extends PHPUnit_Framework_TestCase
     $_POST['input_width'] = 1024;
     $_POST['input_height'] = 1024;
     $_POST['check_filetime'] = "on";
+    $_POST['check_resize'] = "on";
     $_POST['text_filedate'] = "2015/7/15";
     $_POST['file_count'] = 3;
     //
@@ -138,6 +139,46 @@ class photoTest extends PHPUnit_Framework_TestCase
     $this->assertFileExists($_SESSION['tempfolder']."/".$_FILES['input_file']['name'][0]);
     $this->assertFileExists($_SESSION['tempfolder']."/".$_FILES['input_file']['name'][1]);
     $this->assertFileExists($_SESSION['tempfolder']."/".$_FILES['input_file']['name'][2]);
+  }
+
+  /**
+   * 時間調整のテスト
+   * @group post
+   */
+  public function testPostAddSecond() {
+    $_POST['cmd'] = "all";
+    $_POST['text_addsecond'] = "10";
+    $this->engine->procConv();
+
+    // 時間のチェック
+    $pel = new CPel($_SESSION['tempfolder']."/".$_FILES['input_file']['name'][0]);
+    $this->assertEquals('2015:07:11 09:21:56', $pel->getDateTime());
+
+    $pel = new CPel($_SESSION['tempfolder']."/".$_FILES['input_file']['name'][1]);
+    $this->assertEquals('2015:07:15 13:22:10', $pel->getDateTime());
+
+    $pel = new CPel($_SESSION['tempfolder']."/".$_FILES['input_file']['name'][2]);
+    $this->assertEquals('2015:07:15 13:22:20', $pel->getDateTime());
+  }
+
+  /**
+   * 時間調整のテスト
+   * @group post
+   */
+  public function testPostSubSecond() {
+    $_POST['cmd'] = "all";
+    $_POST['text_addsecond'] = "-10";
+    $this->engine->procConv();
+
+    // 時間のチェック
+    $pel = new CPel($_SESSION['tempfolder']."/".$_FILES['input_file']['name'][0]);
+    $this->assertEquals('2015:07:11 09:21:36', $pel->getDateTime());
+
+    $pel = new CPel($_SESSION['tempfolder']."/".$_FILES['input_file']['name'][1]);
+    $this->assertEquals('2015:07:15 13:21:50', $pel->getDateTime());
+
+    $pel = new CPel($_SESSION['tempfolder']."/".$_FILES['input_file']['name'][2]);
+    $this->assertEquals('2015:07:15 13:22:00', $pel->getDateTime());
   }
 
   /**
