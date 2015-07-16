@@ -186,8 +186,8 @@ class photoTest extends PHPUnit_Framework_TestCase
    * @group post
    */
   public function testPostAllNoDate() {
-    $_POST['text_filedate'] = "";
     $_POST['cmd'] = 'all';
+    $_POST['text_filedate'] = "";
     $this->engine->procConv();
   }
 

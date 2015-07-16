@@ -19,9 +19,16 @@ class CPhotoConvProc {
   private $proc = null;
   private $isTest = false;
   private $response = ["result" => "ok"];
+  private $sess = null;
 
   function __construct($test=false) {
     $this->isTest = $test;
+  }
+
+  function __destruct() {
+    if ($this->sess != null) {
+      $this->removeTempFolder();
+    }
   }
 
   // コンバートを実行する
@@ -116,8 +123,12 @@ class CPhotoConvProc {
     // zipファイルを削除
     unlink($zipname);
 
-    // zipをダウンロード
+    // 実際の稼動時の処理
     if (!$this->isTest) {
+      // 作業フォルダーを削除する
+      $this->removeTempFolder();
+
+      // zipをダウンロード
       header("Content-Disposition: attachment; filename='photos.zip'");
       header("Content-Length: $file_size");
       header("Content-Type: application/octet-stream");
@@ -133,7 +144,31 @@ class CPhotoConvProc {
   }
 
   /**
+   * 作業フォルダーを削除する
+   */
+  public function removeTempFolder() {
+    // ファイルを追加
+    if (is_dir($this->sess['tempfolder']))
+    {
+      if ($dh = opendir($this->sess['tempfolder'])) {
+        while (($file=readdir($dh))!== FALSE) {
+          $datafile = $this->sess['tempfolder']."/".$file;
+          // ファイルで、拡張子がjpgの時、アーカイブに追加
+          if (is_file($datafile))
+          {
+            unlink($datafile);
+          }
+        }
+      }
+    }
+
+    // 作業フォルダーを削除する
+    rmdir($this->sess['tempfolder']);
+  }
+
+  /**
    * 返還後のフォルダーを圧縮。圧縮ファイルのパスを返す
+   * 圧縮したファイルは消す
    * @return {string} $fname zipファイル名。失敗時はFALSE
    */
   function zip()
@@ -223,6 +258,9 @@ class CPhotoConvProc {
     $_SESSION['filecount'] = 0;
     */
     $_SESSION['tempfolder'] = $tmpfolder;
+
+    // セッションを記録
+    $this->sess = $_SESSION;
   }
 
   private function procUpload() {
