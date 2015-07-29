@@ -129,7 +129,7 @@ class CPhotoConvProc {
       $this->removeTempFolder();
 
       // zipをダウンロード
-      header("Content-Disposition: attachment; filename='photos.zip'");
+      header("Content-Disposition: attachment; filename=photos.zip");
       header("Content-Length: $file_size");
       header("Content-Type: application/octet-stream");
       header("Connection: close");
